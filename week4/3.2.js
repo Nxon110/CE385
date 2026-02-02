@@ -1,0 +1,3 @@
+const fetchDataWithCallback = (callback) => {
+    setTimeout
+}
