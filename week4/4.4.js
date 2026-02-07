@@ -7,7 +7,7 @@ const fetchDataFromServer1 = () => {
 };
 
 const fetchDataFromServer2 = () => {
-  return new Promise((reject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject("Error from Server 2");
     }, 1000);
@@ -22,15 +22,23 @@ const fetchDataFromServer3 = () => {
   });
 };
 
-Promise.race([promise1, promise2, promise])
-  .then((result) => {
-    console.log('First promise resolved/reject');
-
-Promise.allSettled([
+Promise.any([
   fetchDataFromServer1(),
   fetchDataFromServer2(),
-  fetchDataFromServer3(),
-]).then((results) => {
-  console.log("All server results:");
-  console.log(results);
-});
+  fetchDataFromServer3()
+])
+  .then((result) => {
+    console.log("First successful result:", result);
+  })
+  .catch((error) => {
+    console.log("All servers failed:", error);
+  });
+
+  Promise.allSettled([
+  fetchDataFromServer1(),
+  fetchDataFromServer2(),
+  fetchDataFromServer3()
+])
+  .then((results) => {
+    console.log("All server results:", results);
+  });
